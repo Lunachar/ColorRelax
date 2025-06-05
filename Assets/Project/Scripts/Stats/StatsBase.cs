@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ClickStats", menuName = "Stats/ClickStats")]
-public class ClickStats : ScriptableObject
+[CreateAssetMenu(fileName = "StatsBase", menuName = "Stats/StatsBase")]
+public class StatsBase : ScriptableObject
 {
     public int buttonClickCount;
     public int totalScore;
-    public int starClickCount;
+    public IntGameEvent onClickUpdated; // on click event
 
     public void SaveToJson()
     {
@@ -26,13 +26,12 @@ public class ClickStats : ScriptableObject
 
     private string GetJsonPath()
     {
-        return System.IO.Path.Combine(Application.persistentDataPath, "click_stats.json");
+        return System.IO.Path.Combine(Application.persistentDataPath, "stats_base.json");
     }
 
     public void ResetStats()
     {
         buttonClickCount = 0;
-        starClickCount = 0;
         totalScore = 0;
         SaveToJson();
     }
@@ -44,6 +43,14 @@ public class ClickStats : ScriptableObject
         
         int scoreToAdd = Mathf.RoundToInt(baseScore *(multiplier + 1) * speedMultiplier);
         totalScore += scoreToAdd;
-        FindObjectOfType<UIManager>().PlayScoreAnimation();
+        GameManager.instance.GetUiManager.PlayScoreAnimation();
+    }
+
+    public void CalculateButtonClickCount()
+    {
+        buttonClickCount++;
+        GameManager.instance.GetUiManager.PlayScoreAnimation();
+        onClickUpdated.Invoke(buttonClickCount);
+        SaveToJson();
     }
 }

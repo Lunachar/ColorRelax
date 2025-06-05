@@ -2,12 +2,13 @@ using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI clickConterText;
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private ClickStats clickStats;
+    [FormerlySerializedAs("clickStats")] [SerializeField] private StatsBase statsBase;
 
     private Color defaultColor;
 
@@ -19,10 +20,10 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        clickConterText.text = clickStats.buttonClickCount.ToString();
-        scoreText.text = clickStats.totalScore.ToString();
+        clickConterText.text = statsBase.buttonClickCount.ToString();
+        scoreText.text = statsBase.totalScore.ToString();
         
-        float colorLerp = Mathf.Clamp01(clickStats.totalScore / 1000f);
+        float colorLerp = Mathf.Clamp01(statsBase.totalScore / 1000f);
         scoreText.color = Color.Lerp(defaultColor, Color.yellow, colorLerp);
     }
 
