@@ -49,7 +49,7 @@ public class StatsBase : ScriptableObject
     public void CalculateButtonClickCount()
     {
         buttonClickCount++;
-        GameManager.instance.GetUiManager.PlayScoreAnimation();
+        //GameManager.instance.GetUiManager.PlayScoreAnimation();
         onClickUpdated.Invoke(buttonClickCount);
         SaveToJson();
     }
