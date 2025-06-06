@@ -33,4 +33,11 @@ public class UIManager : MonoBehaviour
         scoreText.DOColor(Color.green, 0.2f).OnComplete(() =>
             scoreText.DOColor(scoreText.color, 0.2f));
     }
+
+public void PlayClickAnimation()
+    {
+        clickConterText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
+        clickConterText.DOColor(Color.green, 0.2f).OnComplete(() =>
+            clickConterText.DOColor(scoreText.color, 0.2f));
+    }
 }
