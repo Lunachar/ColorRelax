@@ -17,7 +17,7 @@ public class ButtonBehaviour : MonoBehaviour
     // button pressing speed variables
     private float lastClickTime;
     private float clickInterval;
-    public float speedMultiplier = 1f;
+    public float speedMultiplier;
 
     private void Start()
     {
@@ -32,13 +32,14 @@ public class ButtonBehaviour : MonoBehaviour
         // interval between button clicks
         clickInterval = Time.time - lastClickTime;
         lastClickTime = Time.time;
+        GameManager.instance.GetStatsBase.SetClickSpeed(clickInterval);
 
         // the higher the clicks, the higher the multiplier (not less than 1)
-        speedMultiplier = Mathf.Clamp(1f / clickInterval, 1f, 1);
+        speedMultiplier = Mathf.Clamp(1f / clickInterval, 0.01f, 1);
         
         GameManager.instance.GetStatsBase.CalculateButtonClickCount();
 
-        GameManager.instance.GetStatsBase.CalculateScore((int)speedMultiplier);
+        GameManager.instance.GetStatsBase.CalculateScore(speedMultiplier);
         
         if (GameManager.instance.GetSoundDatabase.buttonClickSound.Count > 0)
         {

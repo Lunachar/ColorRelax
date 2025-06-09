@@ -5,8 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "StatsBase", menuName = "Stats/StatsBase")]
 public class StatsBase : ScriptableObject
 {
-    public int buttonClickCount;
     public int totalScore;
+    public int buttonClickCount;
+    public float clickSpeed;
+    public float clickSpeedDecayRate = 1f;
+    
     public IntGameEvent onClickUpdated; // on click event
 
     public void SaveToJson()
@@ -33,17 +36,27 @@ public class StatsBase : ScriptableObject
     {
         buttonClickCount = 0;
         totalScore = 0;
+        clickSpeed = 0;
         SaveToJson();
     }
 
-    public void CalculateScore(int speedMultiplier)
+    public void CalculateScore(float speedMultiplier)
     {
         int baseScore = 1;
-        int multiplier = Mathf.FloorToInt(buttonClickCount / 5);
         
-        int scoreToAdd = Mathf.RoundToInt(baseScore *(multiplier + 1) * speedMultiplier);
+        // exponent is doubling every 5 clicks
+        float exponent = buttonClickCount / 5;
+        float expMultiplier = Mathf.Pow(2f, exponent);
+        
+        // final additive
+        float rawScore = baseScore * expMultiplier * speedMultiplier;
+        int scoreToAdd = Mathf.RoundToInt(rawScore);
+        
         totalScore += scoreToAdd;
         GameManager.instance.GetUiManager.PlayScoreAnimation();
+        
+        SaveToJson();
+        
     }
 
     public void CalculateButtonClickCount()
@@ -52,5 +65,26 @@ public class StatsBase : ScriptableObject
         GameManager.instance.GetUiManager.PlayClickAnimation();
         onClickUpdated.Invoke(buttonClickCount);
         SaveToJson();
+    }
+
+    public void SetClickSpeed(float buttonClickSpeed)
+    {
+        float rawSpeed = 1f / buttonClickSpeed;
+        clickSpeed = Mathf.Clamp(rawSpeed, 0f, 10f);
+    }
+
+    public void DecayClickSpeed()
+    {
+        clickSpeed = Mathf.MoveTowards(clickSpeed, 0f, clickSpeedDecayRate * Time.deltaTime);
+    }
+
+    public void AddButtonClickCount(int buttonClickCount)
+    {
+        this.buttonClickCount += buttonClickCount;
+    }
+
+    public int GetButtonClickCount()
+    {
+        return buttonClickCount;
     }
 }

@@ -27,6 +27,7 @@ public class ExitManager : MonoBehaviour
         {
             ToggleExitPanel();
         }
+        
     }
 
     private void ToggleExitPanel()
