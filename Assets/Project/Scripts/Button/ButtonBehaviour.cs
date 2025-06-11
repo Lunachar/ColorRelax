@@ -35,11 +35,9 @@ public class ButtonBehaviour : MonoBehaviour
         GameManager.instance.GetStatsBase.SetClickSpeed(clickInterval);
 
         // the higher the clicks, the higher the multiplier (not less than 1)
-        speedMultiplier = Mathf.Clamp(1f / clickInterval, 0.01f, 1);
+        speedMultiplier = Mathf.Clamp(1f / clickInterval, 0.01f, 10f);
         
-        GameManager.instance.GetStatsBase.CalculateButtonClickCount();
-
-        GameManager.instance.GetStatsBase.CalculateScore(speedMultiplier);
+        GameManager.instance.GetStatsBase.RegisterClick(speedMultiplier);
         
         if (GameManager.instance.GetSoundDatabase.buttonClickSound.Count > 0)
         {

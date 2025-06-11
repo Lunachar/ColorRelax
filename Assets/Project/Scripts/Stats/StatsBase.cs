@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "StatsBase", menuName = "Stats/StatsBase")]
 public class StatsBase : ScriptableObject
@@ -9,8 +10,10 @@ public class StatsBase : ScriptableObject
     public int buttonClickCount;
     public float clickSpeed;
     public float clickSpeedDecayRate = 1f;
-    
+
     public IntGameEvent onClickUpdated; // on click event
+    public UnityEvent<int> onScoreUpdated = new UnityEvent<int>();
+    public UnityEvent<int> onClickCountUpdated = new UnityEvent<int>();
 
     public void SaveToJson()
     {
@@ -40,42 +43,56 @@ public class StatsBase : ScriptableObject
         SaveToJson();
     }
 
-    public void CalculateScore(float speedMultiplier)
-    {
-        int baseScore = 1;
-        
-        // exponent is doubling every 5 clicks
-        float exponent = buttonClickCount / 5;
-        float expMultiplier = Mathf.Pow(2f, exponent);
-        
-        // final additive
-        float rawScore = baseScore * expMultiplier * speedMultiplier;
-        int scoreToAdd = Mathf.RoundToInt(rawScore);
-        
-        totalScore += scoreToAdd;
-        GameManager.instance.GetUiManager.PlayScoreAnimation();
-        
-        SaveToJson();
-        
-    }
-
-    public void CalculateButtonClickCount()
+    public void RegisterClick(float speedMultiplier)
     {
         buttonClickCount++;
-        GameManager.instance.GetUiManager.PlayClickAnimation();
+
+        // calculate score for one click
+        int baseScore = 1;
+        float exponent = buttonClickCount / 5f;
+        float expMultiplier = Mathf.Pow(2f, exponent);
+        float rawScore = baseScore * expMultiplier * speedMultiplier;
+        int scoreToAdd = Mathf.RoundToInt(rawScore);
+
+        totalScore += scoreToAdd;
+
+        // events
         onClickUpdated.Invoke(buttonClickCount);
+        onScoreUpdated.Invoke(totalScore);
+
+        // UI
+        GameManager.instance.GetBonusHistory.AddBonusEntry(scoreToAdd);
+        GameManager.instance.GetUiManager.PlayScoreAnimation();
+        GameManager.instance.GetUiManager.PlayClickAnimation();
+
         SaveToJson();
     }
+
+    public void TotalScore(int value)
+    {
+        int currentAdd = value;
+        totalScore += currentAdd;
+        GameManager.instance.GetBonusHistory.AddBonusEntry(currentAdd);
+        GameManager.instance.GetUiManager.PlayScoreAnimation();
+
+        SaveToJson();
+    }
+
 
     public void SetClickSpeed(float buttonClickSpeed)
     {
+        if (buttonClickSpeed <= 0f)
+        {
+            clickSpeed = 0;
+            return;
+        }
         float rawSpeed = 1f / buttonClickSpeed;
         clickSpeed = Mathf.Clamp(rawSpeed, 0f, 10f);
     }
 
     public void DecayClickSpeed()
     {
-        clickSpeed = Mathf.MoveTowards(clickSpeed, 0f, clickSpeedDecayRate * Time.deltaTime);
+        clickSpeed = Mathf.Lerp(clickSpeed, 0f, clickSpeedDecayRate * Time.deltaTime);
     }
 
     public void AddButtonClickCount(int buttonClickCount)

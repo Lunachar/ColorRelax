@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -8,8 +9,8 @@ public class ClickSpeedGraph : MonoBehaviour
 {
     private StatsBase statsBase;
     public int maxPoints = 100;
-    public float graphHeight = 400f;
-    public float graphWidth = 600f;
+    public float graphHeight;
+    public float graphWidth;
     public float maxSpeedValue = 4f;
     
     private LineRenderer lineRenderer;
@@ -20,6 +21,7 @@ public class ClickSpeedGraph : MonoBehaviour
         statsBase = GameManager.instance.GetStatsBase;
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = maxPoints;
+        lineRenderer.widthMultiplier = 1f;
         
         // graph initialization with zeros
         for (int i = 0; i < maxPoints; i++)
@@ -34,7 +36,7 @@ public class ClickSpeedGraph : MonoBehaviour
         float speed = Mathf.Clamp(statsBase.clickSpeed, 0f, maxSpeedValue);
         speedValues.Enqueue(speed);
         
-        // remove oldest value from the graph
+        // remove the oldest value from the graph
         if (speedValues.Count > maxPoints)
             speedValues.Dequeue();
         

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private StatsBase statsBase;
     [SerializeField] private ButtonBehaviour buttonBehaviour;
     [SerializeField] private BackgroundBehaviour backgroundBehaviour;
+    [SerializeField] private BonusHistory bonusHistory;
     
     [SerializeField] private Camera mainCamera;
     [SerializeField] private ParticleSystem fireworks;
@@ -61,9 +62,11 @@ public class GameManager : MonoBehaviour
     public StatsBase GetStatsBase => statsBase;
     public UIManager GetUiManager => uiManager;
     public ButtonBehaviour GetButtonBehaviour => buttonBehaviour;
+    public BackgroundBehaviour GetBackgroundBehaviour => backgroundBehaviour;
     public SoundDatabase GetSoundDatabase => soundDatabase;
     public ColorDatabase GetColorDatabase => colorDatabase;
     public AudioSource GsoundEffects => soundEffects;
     public AudioSource GbackgroundMusic => backgroundMusic;
     public Camera GmainCamera => mainCamera;
+    public BonusHistory GetBonusHistory => bonusHistory;
 }

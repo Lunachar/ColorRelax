@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 855708bbf9ca2254a8096a903fe515db, type: 3}
   m_Name: StatsBase
   m_EditorClassIdentifier: 
-  buttonClickCount: 37
-  totalScore: 963
+  totalScore: 0
+  buttonClickCount: 0
+  clickSpeed: 0
+  clickSpeedDecayRate: 0.1
   onClickUpdated:
     m_PersistentCalls:
       m_Calls:

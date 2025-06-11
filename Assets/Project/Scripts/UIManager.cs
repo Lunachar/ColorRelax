@@ -8,10 +8,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI clickConterText;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI currentClickSpeed;
-    //[SerializeField] private float clickSpeedDecayRate = 0.5f;
+    
+    [SerializeField] private CanvasGroup popupPanel;
+    [SerializeField] private TextMeshProUGUI popupText;
+    [SerializeField] private float popupDuration = 1.5f;
+    private Tween currentPopupTween;
+    
     private StatsBase statsBase;
 
     private Color defaultColor;
+    
 
 
     private void Start()
@@ -56,5 +62,20 @@ public class UIManager : MonoBehaviour
         currentClickSpeed.color = Color.Lerp(Color.gray, Color.green, intensity);
         
         currentClickSpeed.transform.DOScale(Vector3.one * (1f + 0.3f * intensity), 0.2f).SetEase(Ease.OutQuad);
+    }
+
+    public void ShowPopup(string message)
+    {
+        currentPopupTween?.Kill();
+        
+        popupText.text = message;
+        popupPanel.alpha = 0;
+        popupPanel.gameObject.SetActive(true);
+        
+        currentPopupTween = DOTween.Sequence()
+            .Append(popupPanel.DOFade(1, 0.3f))
+            .AppendInterval(popupDuration)
+            .Append(popupPanel.DOFade(0, 0.3f))
+            .OnComplete(() => popupPanel.gameObject.SetActive(false));
     }
 }
