@@ -71,6 +71,7 @@ public class StatsBase : ScriptableObject
     public void TotalScore(int value)
     {
         int currentAdd = value;
+// TODO: look here. totalScore changes second time
         totalScore += currentAdd;
         GameManager.instance.GetBonusHistory.AddBonusEntry(currentAdd);
         GameManager.instance.GetUiManager.PlayScoreAnimation();
