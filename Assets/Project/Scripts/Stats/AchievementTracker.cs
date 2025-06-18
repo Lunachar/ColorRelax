@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -114,7 +115,14 @@ public class AchievementTracker : MonoBehaviour
 
     private void GrantBonus(int value, string message)
     {
-        statsBase.TotalScore(value);
+        
+        StartCoroutine(Wait(value));
         GameManager.instance.GetUiManager.ShowPopup(message);
+    }
+
+    private IEnumerator Wait(int value)
+    {
+            yield return new WaitForSeconds(1);
+            statsBase.TotalScore(value);
     }
 }

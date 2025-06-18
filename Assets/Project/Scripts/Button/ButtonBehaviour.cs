@@ -27,13 +27,16 @@ public class ButtonBehaviour : MonoBehaviour
 
     private void OnButtonClick()
     {
+        Debug.Log("Нажатие кнопки зарегистрировано");
+
         if(Time.timeScale < 0.1f) return;
         
         // interval between button clicks
         clickInterval = Time.time - lastClickTime;
         lastClickTime = Time.time;
-        GameManager.instance.GetStatsBase.SetClickSpeed(clickInterval);
 
+        GameManager.instance.GetStatsBase.SetClickSpeed(clickInterval);
+        
         // the higher the clicks, the higher the multiplier (not less than 1)
         speedMultiplier = Mathf.Clamp(1f / clickInterval, 0.01f, 10f);
         

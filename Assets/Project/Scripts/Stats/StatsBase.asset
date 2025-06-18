@@ -12,34 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 855708bbf9ca2254a8096a903fe515db, type: 3}
   m_Name: StatsBase
   m_EditorClassIdentifier: 
-  totalScore: 0
-  buttonClickCount: 0
+  totalScore: 86901
+  buttonClickCount: 58
   clickSpeed: 0
   clickSpeedDecayRate: 0.1
   onClickUpdated:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  onScoreUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  onClickCountUpdated:
+    m_PersistentCalls:
+      m_Calls: []

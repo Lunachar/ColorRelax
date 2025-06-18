@@ -12,7 +12,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CanvasGroup popupPanel;
     [SerializeField] private TextMeshProUGUI popupText;
     [SerializeField] private float popupDuration = 1.5f;
+    
     private Tween currentPopupTween;
+    
+    private Tween clickSpeedScaleTween;
     
     private StatsBase statsBase;
 
@@ -28,6 +31,11 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if (scoreText.transform.localScale != Vector3.one)
+        {
+            Debug.LogWarning("⚠️ scoreText scale changed: " + scoreText.transform.localScale);
+        }
+
         clickConterText.text = statsBase.buttonClickCount.ToString();
         scoreText.text = statsBase.totalScore.ToString();
 
@@ -40,6 +48,7 @@ public class UIManager : MonoBehaviour
 
     public void PlayScoreAnimation()
     {
+        scoreText.transform.DOKill(true);
         scoreText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
         scoreText.DOColor(Color.green, 0.2f).OnComplete(() =>
             scoreText.DOColor(scoreText.color, 0.2f));
@@ -47,6 +56,7 @@ public class UIManager : MonoBehaviour
 
     public void PlayClickAnimation()
     {
+        clickConterText.transform.DOKill(true);
         clickConterText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
         clickConterText.DOColor(Color.green, 0.2f).OnComplete(() =>
             clickConterText.DOColor(scoreText.color, 0.2f));
@@ -54,12 +64,21 @@ public class UIManager : MonoBehaviour
 
     public void UpdateClickSpeedText()
     {
-        float clickSpeed = GameManager.instance.GetStatsBase.clickSpeed;
+        float clickSpeed = statsBase.clickSpeed;
+
+        if (currentClickSpeed == null) 
+        {
+            Debug.LogError("currentClickSpeed == NULL!");
+            return;
+        }
         currentClickSpeed.text = $"{clickSpeed:0.00}";
         
         float intensity = Mathf.InverseLerp(0, 10, clickSpeed);
         
         currentClickSpeed.color = Color.Lerp(Color.gray, Color.green, intensity);
+        
+        clickSpeedScaleTween?.Kill(); // stop previous anim
+        currentClickSpeed.transform.localScale = Vector3.one; // reset scale
         
         currentClickSpeed.transform.DOScale(Vector3.one * (1f + 0.3f * intensity), 0.2f).SetEase(Ease.OutQuad);
     }

@@ -82,14 +82,17 @@ public class StatsBase : ScriptableObject
 
     public void SetClickSpeed(float buttonClickSpeed)
     {
-        if (buttonClickSpeed <= 0f)
-        {
-            clickSpeed = 0;
-            return;
-        }
-        float rawSpeed = 1f / buttonClickSpeed;
-        clickSpeed = Mathf.Clamp(rawSpeed, 0f, 10f);
+        // if (buttonClickSpeed <= 0f)
+        // {
+        //     clickSpeed = 0;
+        //     return;
+        // }
+
+        float targetSpeed = Mathf.Clamp(1f / buttonClickSpeed, 0f, 10f);
+    
+        clickSpeed = Mathf.Lerp(clickSpeed, targetSpeed, 0.3f); 
     }
+
 
     public void DecayClickSpeed()
     {
