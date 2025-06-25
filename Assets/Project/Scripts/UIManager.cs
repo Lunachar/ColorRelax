@@ -12,6 +12,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CanvasGroup popupPanel;
     [SerializeField] private TextMeshProUGUI popupText;
     [SerializeField] private float popupDuration = 1.5f;
+
+[SerializeField] private NameInputUI nameInputUI;
+    [SerializeField] private ExitMenu exitMenu;
     
     private Tween currentPopupTween;
     
@@ -96,5 +99,15 @@ public class UIManager : MonoBehaviour
             .AppendInterval(popupDuration)
             .Append(popupPanel.DOFade(0, 0.3f))
             .OnComplete(() => popupPanel.gameObject.SetActive(false));
+    }
+
+  public void ShowNameInputUI()
+    {
+        nameInputUI.Show();
+    }
+
+    public void ShowLeaderboardUI()
+    {
+        exitMenu.ShowLeaderboard();
     }
 }
