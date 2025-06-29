@@ -1,4 +1,4 @@
-using System.Collections;
+/* System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
@@ -19,12 +19,12 @@ public class BonusHistory : MonoBehaviour
     private Vector3 nextEntryPosition;
     private bool isDisplaying = false;
 
-    private void Start()
+  /*  private void Start()
     {
         nextEntryPosition = mainScoreText.transform.position -
                             new Vector3(0, mainScoreText.rectTransform.rect.height + entrySpacing, 0);
     }
-
+*/
     public void AddBonusEntry(int bonus)
     {
         pendingBonuses.Enqueue(bonus);
