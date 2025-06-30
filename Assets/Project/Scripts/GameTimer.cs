@@ -40,7 +40,7 @@ public class GameTimer : MonoBehaviour
         }
 
         // Мигание красным, если меньше 1 секунды
-        if (remainingTime < 1000f)
+        if (remainingTime < 10000f)
         {
             float ping = Mathf.PingPong(Time.time * 5f, 1f);
             timeField.color = Color.Lerp(Color.white, Color.red, ping);
