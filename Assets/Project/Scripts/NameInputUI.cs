@@ -11,11 +11,14 @@ public class NameInputUI : MonoBehaviour
     private void Awake()
     {
         submitButton.onClick.AddListener(SaveNameAndAddToLeaderboard);
+        transform.localScale = Vector3.one;
         panel.SetActive(false);
     }
 
     public void Show()
     {
+        Time.timeScale = 0f;
+        transform.localScale = Vector3.one;
         panel.SetActive(true);
         nameInputField.text = "";
         nameInputField.characterLimit = 7;
@@ -28,7 +31,7 @@ public class NameInputUI : MonoBehaviour
         if (string.IsNullOrEmpty(playerName)) return;
 
         int score = GameManager.instance.GetStatsBase.totalScore;
-        LeaderboardManager.instance.AddScore(playerName, score);
+        LeaderboardManager.instance.AddEntry(playerName, score);
 
         panel.SetActive(false);
         GameManager.instance.GetUiManager.ShowLeaderboardUI();

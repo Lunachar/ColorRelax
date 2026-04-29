@@ -30,7 +30,7 @@ public class ExitManager : MonoBehaviour
         
     }
 
-    private void ToggleExitPanel()
+    public void ToggleExitPanel()
     {
         bool isActive = !exitConfirmationPanel.activeSelf;
         exitConfirmationPanel.SetActive(isActive);

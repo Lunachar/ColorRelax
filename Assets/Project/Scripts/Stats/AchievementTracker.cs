@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class AchievementTracker : MonoBehaviour
 {
@@ -13,11 +11,9 @@ public class AchievementTracker : MonoBehaviour
     private int[] clickMilestones =
         { 7, 11, 23, 55, 77, 100, 111, 133, 155, 177, 200, 222, 255, 277, 300, 333, 400, 444 };
 
-    private int[] scoreMilestones = { 10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+    private int[] scoreMilestones = { 100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000 };
     private int[] speedMilestones = { 2, 5, 8, 10 };
 
-    private int lastClickMatch = 0;
-    private int lastMilestoneChecked = 0;
     private int matchCombo = 0;
 
     private float clickTimer;
@@ -27,11 +23,12 @@ public class AchievementTracker : MonoBehaviour
     {
         statsBase = GameManager.instance.GetStatsBase;
 
-        if (statsBase != null)
+        var scoreManager = ScoreManager.instance;
+
+        if (scoreManager != null)
         {
-            statsBase.onScoreUpdated.AddListener(CheckScoreMilestones);
-            statsBase.onClickCountUpdated.AddListener(CheckScoreMilestones);
-            statsBase.onClickUpdated.AddListener(OnClickUpdated);
+            scoreManager.onScoreUpdated.AddListener(CheckScoreMilestones);
+            scoreManager.onClickUpdated.AddListener(OnClickUpdated);
         }
     }
 
@@ -56,7 +53,7 @@ public class AchievementTracker : MonoBehaviour
         {
             if (clicks >= milestone && !unlockedClickMilestones.Contains(milestone))
             {
-                GrantBonus(10, $"Matched {milestone} clicks!");
+                GrantBonus(Mathf.Max(25, milestone * 3), $"+{milestone} clicks", "click streak");
                 unlockedClickMilestones.Add(milestone);
             }
         }
@@ -68,7 +65,7 @@ public class AchievementTracker : MonoBehaviour
         {
             if (score >= milestone && !unlockedScoreMilestones.Contains(milestone))
             {
-                GrantBonus(20, $"Matched {milestone} points!");
+                GrantBonus(Mathf.Max(100, milestone / 4), $"+{milestone} round number", "round numb");
                 unlockedScoreMilestones.Add(milestone);
             }
         }
@@ -84,7 +81,7 @@ public class AchievementTracker : MonoBehaviour
             {
                 if ((int)statsBase.clickSpeed == milestone)
                 {
-                    GrantBonus(15, $"Clicking at {milestone} clicks/second!");
+                    GrantBonus(milestone * 75, $"x{milestone} speed", $"x{milestone} speed");
                     break;
                 }
             }
@@ -103,7 +100,7 @@ public class AchievementTracker : MonoBehaviour
             matchCombo++;
             if (matchCombo > 3)
             {
-                GrantBonus(50, $"Combo x{matchCombo}!");
+                GrantBonus(matchCombo * 150, $"Combo x{matchCombo}!", $"combo x{matchCombo}");
                 matchCombo = 0;
             }
         }
@@ -113,16 +110,16 @@ public class AchievementTracker : MonoBehaviour
         }
     }
 
-    private void GrantBonus(int value, string message)
+    private void GrantBonus(int value, string message, string historyLabel)
     {
         
-        StartCoroutine(Wait(value));
+        StartCoroutine(Wait(value, historyLabel));
         GameManager.instance.GetUiManager.ShowPopup(message);
     }
 
-    private IEnumerator Wait(int value)
+    private IEnumerator Wait(int value, string historyLabel)
     {
             yield return new WaitForSeconds(1);
-            statsBase.TotalScore(value);
+            ScoreManager.instance.AddBonus(value, historyLabel);
     }
 }
